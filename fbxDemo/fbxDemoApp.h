@@ -8,8 +8,9 @@ class fbxDemoApp :
 public:
   fbxDemoApp(void);
   ~fbxDemoApp(void);
-  virtual void onMouseButton(GLFWwindow*,int,int,int);
-  virtual void onMouseMove(GLFWwindow*,double,double);
+  virtual void onMouseButton(GLFWwindow*, int, int, int);
+  virtual void onMouseMove(GLFWwindow*, double, double);
+  virtual void onMouseWheel(GLFWwindow*, double, double);
   virtual void render(double);
   virtual void startup(void);
   virtual void shutdown(void);
@@ -25,8 +26,11 @@ protected:
 
   double mouse_x, mouse_y;
   double mouse_base_x, mouse_base_y;
+  
   float rot_x, rot_y;
   float tran_x, tran_y;
+  float zoom;
+
   vmath::mat4 mv_matrix;
   vmath::mat4 proj_matrix;
   int num_vertices;

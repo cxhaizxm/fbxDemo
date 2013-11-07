@@ -38,6 +38,7 @@ void Application::run(Application* the_app)
 
   glfwSetMouseButtonCallback(window, glfw_onMouseButton);
   glfwSetCursorPosCallback(window, glfw_onMouseMove);
+  glfwSetScrollCallback(window, glfw_onMouseWheel);
 
   startup();
   do
@@ -81,7 +82,7 @@ void Application::onMouseMove(GLFWwindow* window, double x, double y)
 {
 }
 
-void Application::onMouseWheel(int pos)
+void Application::onMouseWheel(GLFWwindow* window, double xoffset, double yoffset)
 {
 }
 
@@ -100,9 +101,9 @@ void Application::glfw_onMouseMove(GLFWwindow* window, double x, double y)
   app->onMouseMove(window, x, y);
 }
 
-void Application::glfw_onMouseWheel(int pos)
+void Application::glfw_onMouseWheel(GLFWwindow* window, double xoffset, double yoffset)
 {
-  app->onMouseWheel(pos);
+  app->onMouseWheel(window, xoffset, yoffset);
 }
 
 Application* Application::app = 0;

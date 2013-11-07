@@ -18,13 +18,13 @@ public:
   virtual void onKey(int, int);
   virtual void onMouseButton(GLFWwindow*, int, int, int);
   virtual void onMouseMove(GLFWwindow*, double, double);
-  virtual void onMouseWheel(int);
+  virtual void onMouseWheel(GLFWwindow*, double, double);
 protected:
   static Application* app;
   static void glfw_onResize(int, int);
   static void glfw_onKey(int, int);
   static void glfw_onMouseButton(GLFWwindow*, int, int, int);
   static void glfw_onMouseMove(GLFWwindow*, double, double);
-  static void glfw_onMouseWheel(int);
+  static void glfw_onMouseWheel(GLFWwindow*, double, double);
 };
 

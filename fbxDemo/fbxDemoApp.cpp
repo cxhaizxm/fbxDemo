@@ -154,6 +154,7 @@ void fbxDemoApp::startup(void)
   translationEnabled = false;
   rot_x = rot_y = 0.0f;
   tran_x = tran_y = 0.0f;
+  zoom = -1.0f;
 }
 
 void fbxDemoApp::shutdown(void)
@@ -171,7 +172,7 @@ void fbxDemoApp::render(double currentTime)
   glClearBufferfv(GL_DEPTH, 0, &one);
   glUseProgram(program);
   glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_matrix);
-  vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, -1.0f);
+  vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, zoom);
   mv_matrix *= vmath::rotate(rot_x, 0.0f, 0.0f);
   mv_matrix *= vmath::rotate(0.0f, rot_y, 0.0f);
   
@@ -231,6 +232,11 @@ void fbxDemoApp::onMouseMove(GLFWwindow* window, double x, double y)
     mouse_base_x = mouse_x;
     mouse_base_y = mouse_y;
   }
+}
+
+void fbxDemoApp::onMouseWheel(GLFWwindow* window, double xoffset, double yoffset)
+{
+  zoom += yoffset * 0.1f;
 }
 
 int main(int argc, const char** argv)
