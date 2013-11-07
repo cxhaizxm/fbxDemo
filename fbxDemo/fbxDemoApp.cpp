@@ -140,8 +140,8 @@ void fbxDemoApp::startup(void)
   this->loadFromFBX("file.fbx");
   this->loadVBO();
 
-  glEnable(GL_CULL_FACE);
-  glFrontFace(GL_CCW);
+  //glEnable(GL_CULL_FACE);
+  //glFrontFace(GL_CCW);
   
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
