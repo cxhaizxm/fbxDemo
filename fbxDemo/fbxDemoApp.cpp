@@ -151,8 +151,9 @@ void fbxDemoApp::startup(void)
 
   proj_matrix = vmath::perspective(50.0f, 800.0f/600.0f, 0.1f, 1000.0f);
   rotationEnabled = false;
-  rot_x = 0.0f;
-  rot_y = 0.0f;
+  translationEnabled = false;
+  rot_x = rot_y = 0.0f;
+  tran_x = tran_y = 0.0f;
 }
 
 void fbxDemoApp::shutdown(void)
@@ -170,7 +171,7 @@ void fbxDemoApp::render(double currentTime)
   glClearBufferfv(GL_DEPTH, 0, &one);
   glUseProgram(program);
   glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_matrix);
-  vmath::mat4 mv_matrix = vmath::translate(0.0f, 0.0f, -1.0f);
+  vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, -1.0f);
   mv_matrix *= vmath::rotate(rot_x, 0.0f, 0.0f);
   mv_matrix *= vmath::rotate(0.0f, rot_y, 0.0f);
   
@@ -195,6 +196,21 @@ void fbxDemoApp::onMouseButton(GLFWwindow* window, int button, int action, int m
       rotationEnabled = false;
     }
   }
+  if(button == GLFW_MOUSE_BUTTON_MIDDLE)
+  {
+    if(action == GLFW_PRESS)
+    {
+      printf("Middle mouse button clicked!\n");
+      translationEnabled = true;
+      mouse_base_x = mouse_x;
+      mouse_base_y = mouse_y;
+    }
+    else if (action == GLFW_RELEASE)
+    {
+      printf("Middle mouse button released!\n");
+      translationEnabled = false;
+    }
+  }
 }
 
 void fbxDemoApp::onMouseMove(GLFWwindow* window, double x, double y)
@@ -205,6 +221,13 @@ void fbxDemoApp::onMouseMove(GLFWwindow* window, double x, double y)
   {
     rot_y += (float)(mouse_x - mouse_base_x)/1.0f;
     rot_x += (float)(mouse_y - mouse_base_y)/1.0f;
+    mouse_base_x = mouse_x;
+    mouse_base_y = mouse_y;
+  }
+  if(translationEnabled)
+  {
+    tran_x += (float)(mouse_x - mouse_base_x)/800.0f;
+    tran_y -= (float)(mouse_y - mouse_base_y)/600.0f;
     mouse_base_x = mouse_x;
     mouse_base_y = mouse_y;
   }

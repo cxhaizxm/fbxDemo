@@ -21,9 +21,12 @@ public:
   void setIndexBuffer(GLuint*,int);
 protected:
   bool rotationEnabled;
+  bool translationEnabled;
+
   double mouse_x, mouse_y;
   double mouse_base_x, mouse_base_y;
   float rot_x, rot_y;
+  float tran_x, tran_y;
   vmath::mat4 mv_matrix;
   vmath::mat4 proj_matrix;
   int num_vertices;
