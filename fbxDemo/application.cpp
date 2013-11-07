@@ -36,6 +36,9 @@ void Application::run(Application* the_app)
     exit(-1);
   }
 
+  glfwSetMouseButtonCallback(window, glfw_onMouseButton);
+  glfwSetCursorPosCallback(window, glfw_onMouseMove);
+
   startup();
   do
   {
@@ -70,11 +73,11 @@ void Application::onKey(int key, int action)
 {
 }
 
-void Application::onMouseButton(int button, int action)
+void Application::onMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
 }
 
-void Application::onMouseMove(int x, int y)
+void Application::onMouseMove(GLFWwindow* window, double x, double y)
 {
 }
 
@@ -87,14 +90,14 @@ void Application::glfw_onKey(int key, int action)
   app->onKey(key, action);
 }
 
-void Application::glfw_onMouseButton(int button, int action)
+void Application::glfw_onMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
-  app->onMouseButton(button, action);
+  app->onMouseButton(window, button, action, mods);
 }
 
-void Application::glfw_onMouseMove(int x, int y)
+void Application::glfw_onMouseMove(GLFWwindow* window, double x, double y)
 {
-  app->onMouseMove(x, y);
+  app->onMouseMove(window, x, y);
 }
 
 void Application::glfw_onMouseWheel(int pos)

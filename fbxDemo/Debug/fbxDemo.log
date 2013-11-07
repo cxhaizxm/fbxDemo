@@ -1,18 +1,5 @@
-﻿Build started 11/5/2013 8:03:26 PM.
-     1>Project "C:\Users\daniel\documents\visual studio 2012\Projects\fbxDemo\fbxDemo\fbxDemo.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt application.cpp fbxDemoApp.cpp shader.cpp
-         shader.cpp
-         fbxDemoApp.cpp
-         application.cpp
-         Generating Code...
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\daniel\documents\visual studio 2012\Projects\fbxDemo\Debug\fbxDemo.exe" /INCREMENTAL /NOLOGO opengl32.lib glew32.lib glfw3.lib libfbxsdk.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\daniel\documents\visual studio 2012\Projects\fbxDemo\Debug\fbxDemo.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\daniel\documents\visual studio 2012\Projects\fbxDemo\Debug\fbxDemo.lib" /MACHINE:X86 Debug\application.obj
-         Debug\fbxDemoApp.obj
-         Debug\shader.obj
-     1>LINK : fatal error LNK1561: entry point must be defined
-     1>Done Building Project "C:\Users\daniel\documents\visual studio 2012\Projects\fbxDemo\fbxDemo\fbxDemo.vcxproj" (Build target(s)) -- FAILED.
+﻿Build started 11/7/2013 4:17:09 PM.
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:07.01
+Time Elapsed 00:00:00.15
