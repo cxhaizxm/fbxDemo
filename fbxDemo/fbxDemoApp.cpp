@@ -165,6 +165,9 @@ void fbxDemoApp::loadVBO()
 
 void fbxDemoApp::startup(void)
 {
+  w = 800;
+  h = 600;
+  aspect = (float)w/(float)h;
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vertex_vbo);
   glGenBuffers(1, &index_vbo);
@@ -182,12 +185,13 @@ void fbxDemoApp::startup(void)
   mv_location = glGetUniformLocation(program, "mv_matrix");
   proj_location = glGetUniformLocation(program, "proj_matrix");
 
-  proj_matrix = vmath::perspective(50.0f, 800.0f/600.0f, 0.1f, 1000.0f);
+  proj_matrix = vmath::perspective(50.0f, aspect, 0.1f, 1000.0f);
   rotationEnabled = false;
   translationEnabled = false;
   rot_x = rot_y = 0.0f;
   tran_x = tran_y = 0.0f;
   zoom = -1.0f;
+  wireframe_mode = false;
 }
 
 void fbxDemoApp::shutdown(void)
@@ -195,12 +199,12 @@ void fbxDemoApp::shutdown(void)
   glDeleteVertexArrays(1, &vao);
   glDeleteProgram(program);
 }
-
+ 
 void fbxDemoApp::render(double currentTime)
 {
   const GLfloat bgcolor[] = { 0.4f, 0.4f, 0.4f, 1.0f };
   static const GLfloat one = 1.0f;
-  glViewport(0, 0, 800, 600);
+  glViewport(0, 0, this->w, this->h);
   glClearBufferfv(GL_COLOR, 0, bgcolor);
   glClearBufferfv(GL_DEPTH, 0, &one);
   glUseProgram(program);
@@ -210,7 +214,22 @@ void fbxDemoApp::render(double currentTime)
   mv_matrix *= vmath::rotate(0.0f, rot_y, 0.0f);
   
   glUniformMatrix4fv(mv_location, 1, GL_FALSE, mv_matrix);
-  glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (GLvoid*)0);
+  if(wireframe_mode)
+  {
+    glDrawElements(GL_LINES, num_indices, GL_UNSIGNED_INT, (GLvoid*)0);
+  }
+  else
+  {
+    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (GLvoid*)0);
+  }
+}
+
+void fbxDemoApp::onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+  if(key == GLFW_KEY_W && action == GLFW_RELEASE)
+  {
+    wireframe_mode = !wireframe_mode;
+  }
 }
 
 void fbxDemoApp::onMouseButton(GLFWwindow* window, int button, int action, int mods)
@@ -260,8 +279,8 @@ void fbxDemoApp::onMouseMove(GLFWwindow* window, double x, double y)
   }
   if(translationEnabled)
   {
-    tran_x += -zoom * (float)(mouse_x - mouse_base_x)/800.0f;
-    tran_y -= -zoom * (float)(mouse_y - mouse_base_y)/600.0f;
+    tran_x += -zoom * (float)(mouse_x - mouse_base_x)/(float)w;
+    tran_y -= -zoom * (float)(mouse_y - mouse_base_y)/(float)h;
     mouse_base_x = mouse_x;
     mouse_base_y = mouse_y;
   }
@@ -270,6 +289,13 @@ void fbxDemoApp::onMouseMove(GLFWwindow* window, double x, double y)
 void fbxDemoApp::onMouseWheel(GLFWwindow* window, double xoffset, double yoffset)
 {
   zoom += (float)yoffset * 0.1f;
+}
+
+void fbxDemoApp::onResize(GLFWwindow* window, int w, int h)
+{
+  this->w = w;
+  this->h = h;
+  aspect = (float)w/(float)h;
 }
 
 int main(int argc, const char** argv)

@@ -8,9 +8,11 @@ class fbxDemoApp :
 public:
   fbxDemoApp(void);
   ~fbxDemoApp(void);
+  virtual void onKey(GLFWwindow*, int, int, int, int);
   virtual void onMouseButton(GLFWwindow*, int, int, int);
   virtual void onMouseMove(GLFWwindow*, double, double);
   virtual void onMouseWheel(GLFWwindow*, double, double);
+  virtual void onResize(GLFWwindow*, int, int);
   virtual void render(double);
   virtual void startup(void);
   virtual void shutdown(void);
@@ -22,6 +24,11 @@ public:
   void setIndexBuffer(GLuint*,int);
   void setNormals(GLfloat*,int);
 protected:
+  // Window information
+  int w, h;
+  float aspect;
+
+  bool wireframe_mode;
   // Toggles for translation modes
   bool rotationEnabled;
   bool translationEnabled;

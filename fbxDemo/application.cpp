@@ -39,6 +39,8 @@ void Application::run(Application* the_app)
   glfwSetMouseButtonCallback(window, glfw_onMouseButton);
   glfwSetCursorPosCallback(window, glfw_onMouseMove);
   glfwSetScrollCallback(window, glfw_onMouseWheel);
+  glfwSetKeyCallback(window, glfw_onKey);
+  glfwSetWindowSizeCallback(window, glfw_onResize);
 
   startup();
   do
@@ -66,11 +68,11 @@ void Application::shutdown(void)
 {
 }
 
-void Application::onResize(int x, int y)
+void Application::onResize(GLFWwindow* window, int x, int y)
 {
 }
 
-void Application::onKey(int key, int action)
+void Application::onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 }
 
@@ -86,9 +88,9 @@ void Application::onMouseWheel(GLFWwindow* window, double xoffset, double yoffse
 {
 }
 
-void Application::glfw_onKey(int key, int action)
+void Application::glfw_onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-  app->onKey(key, action);
+  app->onKey(window, key, scancode, action, mods);
 }
 
 void Application::glfw_onMouseButton(GLFWwindow* window, int button, int action, int mods)
@@ -104,6 +106,11 @@ void Application::glfw_onMouseMove(GLFWwindow* window, double x, double y)
 void Application::glfw_onMouseWheel(GLFWwindow* window, double xoffset, double yoffset)
 {
   app->onMouseWheel(window, xoffset, yoffset);
+}
+
+void Application::glfw_onResize(GLFWwindow* window, int w, int h)
+{
+  app->onResize(window, w, h);
 }
 
 Application* Application::app = 0;

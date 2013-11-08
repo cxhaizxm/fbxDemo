@@ -26,13 +26,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fbxDemoApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="application.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fbxDemoApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
