@@ -20,26 +20,33 @@ public:
   void traverseFBXNodes(FbxNode*);
   void setGeometry(GLfloat*,int);
   void setIndexBuffer(GLuint*,int);
+  void setNormals(GLfloat*,int);
 protected:
+  // Toggles for translation modes
   bool rotationEnabled;
   bool translationEnabled;
-
+  // Mouse coordinates for translation
   double mouse_x, mouse_y;
   double mouse_base_x, mouse_base_y;
-  
+  // Translation values
   float rot_x, rot_y;
   float tran_x, tran_y;
   float zoom;
-
+  // Uniform matrices
   vmath::mat4 mv_matrix;
   vmath::mat4 proj_matrix;
+  
   int num_vertices;
   int num_indices;
+  int num_normals;
+
   GLfloat* vertex_data;
   GLuint* vertex_indices;
+  GLfloat* vertex_normals;
   GLuint vao;
   GLuint vertex_vbo;
   GLuint index_vbo;
+  GLuint normals_vbo;
 
   GLuint program;
   GLuint mv_location;

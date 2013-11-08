@@ -98,9 +98,31 @@ void fbxDemoApp::traverseFBXNodes(FbxNode* node)
         tempVerts[j*4 + 3] = 1.0f;
       }
       this->setGeometry(tempVerts, numVertices);
+
+      // Get indices from the mesh
       int numIndices = mesh->GetPolygonVertexCount();
       int* indices = mesh->GetPolygonVertices();
       this->setIndexBuffer((GLuint*)indices, numIndices);
+
+      FbxGeometryElementNormal* normalElement = mesh->GetElementNormal();
+      if(normalElement)
+      {
+        int numNormals = mesh->GetPolygonCount() * 3;
+        GLfloat* tempNormals = new GLfloat[numNormals * 3];
+        int vertexCounter = 0;
+        for(int polyCounter = 0; polyCounter < mesh->GetPolygonCount(); polyCounter++)
+        {
+          for(int i = 0; i < 3; i++)
+          {
+            FbxVector4 normal = normalElement->GetDirectArray().GetAt(vertexCounter);
+            tempNormals[vertexCounter*3+0] = (GLfloat)normal[0];
+            tempNormals[vertexCounter*3+1] = (GLfloat)normal[1];
+            tempNormals[vertexCounter*3+2] = (GLfloat)normal[2];
+            vertexCounter++;
+          }
+        }
+        this->setNormals(tempNormals, numNormals);
+      }
     }
     this->traverseFBXNodes(childNode);
   } 
@@ -121,6 +143,12 @@ void fbxDemoApp::setIndexBuffer(GLuint* indices, int num_indices)
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * num_indices, vertex_indices, GL_STATIC_DRAW);
 }
 
+void fbxDemoApp::setNormals(GLfloat* normals, int num_normals)
+{
+  this->vertex_normals = normals;
+  this->num_normals = num_normals;
+}
+
 void fbxDemoApp::loadVBO()
 {
   glBindVertexArray(vao);
@@ -128,6 +156,11 @@ void fbxDemoApp::loadVBO()
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * num_vertices * 4, vertex_data, GL_STATIC_DRAW);
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
   glEnableVertexAttribArray(0);
+  
+  glBindBuffer(GL_ARRAY_BUFFER, normals_vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * num_normals * 3, this->vertex_normals, GL_STATIC_DRAW);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(1);
 }
 
 void fbxDemoApp::startup(void)
@@ -236,7 +269,7 @@ void fbxDemoApp::onMouseMove(GLFWwindow* window, double x, double y)
 
 void fbxDemoApp::onMouseWheel(GLFWwindow* window, double xoffset, double yoffset)
 {
-  zoom += yoffset * 0.1f;
+  zoom += (float)yoffset * 0.1f;
 }
 
 int main(int argc, const char** argv)
