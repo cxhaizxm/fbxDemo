@@ -260,8 +260,8 @@ void fbxDemoApp::onMouseMove(GLFWwindow* window, double x, double y)
   }
   if(translationEnabled)
   {
-    tran_x += (float)(mouse_x - mouse_base_x)/800.0f;
-    tran_y -= (float)(mouse_y - mouse_base_y)/600.0f;
+    tran_x += -zoom * (float)(mouse_x - mouse_base_x)/800.0f;
+    tran_y -= -zoom * (float)(mouse_y - mouse_base_y)/600.0f;
     mouse_base_x = mouse_x;
     mouse_base_y = mouse_y;
   }
