@@ -20,8 +20,8 @@ GLuint fbxDemoApp::compile_shaders(void)
   GLuint fragment_shader;
   GLuint program;
 
-  vertex_shader = loadShader("vs.glsl", GL_VERTEX_SHADER);
-  fragment_shader = loadShader("fs.glsl", GL_FRAGMENT_SHADER);
+  vertex_shader = loadShader("phong.vs.glsl", GL_VERTEX_SHADER);
+  fragment_shader = loadShader("blinnphong.fs.glsl", GL_FRAGMENT_SHADER);
 
   program = glCreateProgram();
   glAttachShader(program, vertex_shader);
