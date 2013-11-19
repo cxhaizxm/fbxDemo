@@ -14,34 +14,78 @@ fbxDemoApp::~fbxDemoApp(void)
 {
 }
 
-GLuint fbxDemoApp::compile_shaders(void)
+void fbxDemoApp::compile_shaders(void)
 {
   GLuint vertex_shader;
   GLuint fragment_shader;
-  GLuint program;
 
-  vertex_shader = loadShader("phong.vs.glsl", GL_VERTEX_SHADER);
-  fragment_shader = loadShader("blinnphong.fs.glsl", GL_FRAGMENT_SHADER);
+  // Compile and Link Goraud Shader Program
+  vertex_shader = loadShader("goraud.vs.glsl", GL_VERTEX_SHADER);
+  fragment_shader = loadShader("fs.glsl", GL_FRAGMENT_SHADER);
 
-  program = glCreateProgram();
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
-  glLinkProgram(program);
+  goraud_program = glCreateProgram();
+  glAttachShader(goraud_program, vertex_shader);
+  glAttachShader(goraud_program, fragment_shader);
+  glLinkProgram(goraud_program);
 
   glDeleteShader(vertex_shader);
   glDeleteShader(fragment_shader);
   
   int result;
   int info_log_length = -1;
-  glGetProgramiv(program, GL_LINK_STATUS, &result);
-  glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
+  glGetProgramiv(goraud_program, GL_LINK_STATUS, &result);
+  glGetProgramiv(goraud_program, GL_INFO_LOG_LENGTH, &info_log_length);
   if(info_log_length > 0)
   {
     std::vector<char> errorMsg(info_log_length + 1);
-    glGetProgramInfoLog(program, info_log_length, NULL, &errorMsg[0]);
+    glGetProgramInfoLog(goraud_program, info_log_length, NULL, &errorMsg[0]);
     printf("%s\n", &errorMsg[0]);
   }
-  return program;
+
+  // Compile & Link Phong Shader Program
+  vertex_shader = loadShader("phong.vs.glsl", GL_VERTEX_SHADER);
+  fragment_shader = loadShader("phong.fs.glsl", GL_FRAGMENT_SHADER);
+
+  phong_program = glCreateProgram();
+  glAttachShader(phong_program, vertex_shader);
+  glAttachShader(phong_program, fragment_shader);
+  glLinkProgram(phong_program);
+
+  glDeleteShader(vertex_shader);
+  glDeleteShader(fragment_shader);
+  
+  info_log_length = -1;
+  glGetProgramiv(phong_program, GL_LINK_STATUS, &result);
+  glGetProgramiv(phong_program, GL_INFO_LOG_LENGTH, &info_log_length);
+  if(info_log_length > 0)
+  {
+    std::vector<char> errorMsg(info_log_length + 1);
+    glGetProgramInfoLog(phong_program, info_log_length, NULL, &errorMsg[0]);
+    printf("%s\n", &errorMsg[0]);
+  }
+
+  // Compile & Link Blinn-Phong Shader Program
+  vertex_shader = loadShader("phong.vs.glsl", GL_VERTEX_SHADER);
+  fragment_shader = loadShader("blinnphong.fs.glsl", GL_FRAGMENT_SHADER);
+
+  blinnphong_program = glCreateProgram();
+  glAttachShader(blinnphong_program, vertex_shader);
+  glAttachShader(blinnphong_program, fragment_shader);
+  glLinkProgram(blinnphong_program);
+
+  glDeleteShader(vertex_shader);
+  glDeleteShader(fragment_shader);
+  
+  info_log_length = -1;
+  glGetProgramiv(blinnphong_program, GL_LINK_STATUS, &result);
+  glGetProgramiv(blinnphong_program, GL_INFO_LOG_LENGTH, &info_log_length);
+  if(info_log_length > 0)
+  {
+    std::vector<char> errorMsg(info_log_length + 1);
+    glGetProgramInfoLog(blinnphong_program, info_log_length, NULL, &errorMsg[0]);
+    printf("%s\n", &errorMsg[0]);
+  }
+  return;
 }
 
 void fbxDemoApp::loadFromFBX(const char *filename)
@@ -171,7 +215,8 @@ void fbxDemoApp::startup(void)
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vertex_vbo);
   glGenBuffers(1, &index_vbo);
-  program = compile_shaders();
+  compile_shaders();
+  current_program = goraud_program;
 
   this->loadFromFBX("file.fbx");
   this->loadVBO();
@@ -182,8 +227,8 @@ void fbxDemoApp::startup(void)
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
 
-  mv_location = glGetUniformLocation(program, "mv_matrix");
-  proj_location = glGetUniformLocation(program, "proj_matrix");
+  mv_location = glGetUniformLocation(current_program, "mv_matrix");
+  proj_location = glGetUniformLocation(current_program, "proj_matrix");
 
   proj_matrix = vmath::perspective(50.0f, aspect, 0.1f, 1000.0f);
   rotationEnabled = false;
@@ -197,7 +242,9 @@ void fbxDemoApp::startup(void)
 void fbxDemoApp::shutdown(void)
 {
   glDeleteVertexArrays(1, &vao);
-  glDeleteProgram(program);
+  glDeleteProgram(goraud_program);
+  glDeleteProgram(phong_program);
+  glDeleteProgram(blinnphong_program);
 }
  
 void fbxDemoApp::render(double currentTime)
@@ -207,7 +254,9 @@ void fbxDemoApp::render(double currentTime)
   glViewport(0, 0, this->w, this->h);
   glClearBufferfv(GL_COLOR, 0, bgcolor);
   glClearBufferfv(GL_DEPTH, 0, &one);
-  glUseProgram(program);
+  glUseProgram(current_program);
+  mv_location = glGetUniformLocation(current_program, "mv_matrix");
+  proj_location = glGetUniformLocation(current_program, "proj_matrix");
   glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_matrix);
   vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, zoom);
   mv_matrix *= vmath::rotate(rot_x, 0.0f, 0.0f);
@@ -229,6 +278,18 @@ void fbxDemoApp::onKey(GLFWwindow* window, int key, int scancode, int action, in
   if(key == GLFW_KEY_W && action == GLFW_RELEASE)
   {
     wireframe_mode = !wireframe_mode;
+  }
+  if(key == GLFW_KEY_1 && action == GLFW_RELEASE)
+  {
+    current_program = goraud_program;
+  }
+  if(key == GLFW_KEY_2 && action == GLFW_RELEASE)
+  {
+    current_program = phong_program;
+  }
+  if(key == GLFW_KEY_3 && action == GLFW_RELEASE)
+  {
+    current_program = blinnphong_program;
   }
 }
 

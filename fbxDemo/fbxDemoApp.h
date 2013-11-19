@@ -16,7 +16,7 @@ public:
   virtual void render(double);
   virtual void startup(void);
   virtual void shutdown(void);
-  GLuint compile_shaders(void);
+  void compile_shaders(void);
   void loadFromFBX(const char*);
   void loadVBO(void);
   void traverseFBXNodes(FbxNode*);
@@ -55,7 +55,11 @@ protected:
   GLuint index_vbo;
   GLuint normals_vbo;
 
-  GLuint program;
+  GLuint goraud_program;
+  GLuint phong_program;
+  GLuint blinnphong_program;
+  GLuint current_program;
+
   GLuint mv_location;
   GLuint proj_location;
 };
