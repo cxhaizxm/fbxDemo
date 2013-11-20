@@ -209,8 +209,8 @@ void fbxDemoApp::loadVBO()
 
 void fbxDemoApp::startup(void)
 {
-  w = 800;
-  h = 600;
+  w = 1920;
+  h = 1080;
   aspect = (float)w/(float)h;
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vertex_vbo);
@@ -221,15 +221,19 @@ void fbxDemoApp::startup(void)
   this->loadFromFBX("file.fbx");
   this->loadVBO();
 
-  //glEnable(GL_CULL_FACE);
-  //glFrontFace(GL_CCW);
+  glEnable(GL_CULL_FACE);
+  glFrontFace(GL_CCW);
   
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
 
   mv_location = glGetUniformLocation(current_program, "mv_matrix");
   proj_location = glGetUniformLocation(current_program, "proj_matrix");
+  rimcolor_location = glGetUniformLocation(current_program, "rim_color");
 
+  glUniform3f(rimcolor_location, 0.0, 0.0, 0.0);
+  rim_lighting = false;
+  
   proj_matrix = vmath::perspective(50.0f, aspect, 0.1f, 1000.0f);
   rotationEnabled = false;
   translationEnabled = false;
@@ -249,7 +253,7 @@ void fbxDemoApp::shutdown(void)
  
 void fbxDemoApp::render(double currentTime)
 {
-  const GLfloat bgcolor[] = { 0.4f, 0.4f, 0.4f, 1.0f };
+  const GLfloat bgcolor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
   static const GLfloat one = 1.0f;
   glViewport(0, 0, this->w, this->h);
   glClearBufferfv(GL_COLOR, 0, bgcolor);
@@ -257,6 +261,15 @@ void fbxDemoApp::render(double currentTime)
   glUseProgram(current_program);
   mv_location = glGetUniformLocation(current_program, "mv_matrix");
   proj_location = glGetUniformLocation(current_program, "proj_matrix");
+  rimcolor_location = glGetUniformLocation(current_program, "rim_color");
+  if(rim_lighting)
+  {
+    glUniform3f(rimcolor_location, 0.3, 0.3, 0.3);
+  }
+  else
+  {
+    glUniform3f(rimcolor_location, 0.0, 0.0, 0.0);
+  }
   glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_matrix);
   vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, zoom);
   mv_matrix *= vmath::rotate(rot_x, 0.0f, 0.0f);
@@ -290,6 +303,10 @@ void fbxDemoApp::onKey(GLFWwindow* window, int key, int scancode, int action, in
   if(key == GLFW_KEY_3 && action == GLFW_RELEASE)
   {
     current_program = blinnphong_program;
+  }
+  if(key == GLFW_KEY_R && action == GLFW_RELEASE)
+  {
+    rim_lighting = !rim_lighting;
   }
 }
 

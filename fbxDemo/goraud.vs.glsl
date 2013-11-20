@@ -14,7 +14,17 @@ uniform vec3 light_pos = vec3(100.0, 100.0, 100.0);
 uniform vec3 diffuse_albedo = vec3(0.1, 0.23, 0.5);
 uniform vec3 specular_albedo = vec3(0.7);
 uniform float specular_power = 128.0;
-uniform vec3 ambient = vec3(0.1, 0.1, 0.1);
+
+uniform vec3 rim_color;
+uniform float rim_power = 16.0;
+
+vec3 calculate_rim(vec3 N, vec3 V)
+{
+  float f = 1.0 - dot(N, V);
+  f = smoothstep(0.0, 1.0, f);
+  f = pow(f, rim_power);
+  return f * rim_color;
+}
 
 void main(void)
 {
@@ -30,8 +40,9 @@ void main(void)
   vec3 R = reflect(-L, N);
   vec3 diffuse = max(dot(N, L), 0.0) * diffuse_albedo;
   vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * specular_albedo;
+  vec3 rim_lighting = calculate_rim(N, V);
 
-  color_fs = ambient + diffuse + specular;
+  color_fs = diffuse + specular + rim_lighting;
   normal_fs = normal;
 
   gl_Position = proj_matrix * pos_vs;

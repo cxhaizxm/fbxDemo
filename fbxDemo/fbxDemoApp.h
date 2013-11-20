@@ -32,6 +32,7 @@ protected:
   // Toggles for translation modes
   bool rotationEnabled;
   bool translationEnabled;
+  bool rim_lighting;
   // Mouse coordinates for translation
   double mouse_x, mouse_y;
   double mouse_base_x, mouse_base_y;
@@ -62,5 +63,7 @@ protected:
 
   GLuint mv_location;
   GLuint proj_location;
+  GLuint rimcolor_location;
+
 };
 
