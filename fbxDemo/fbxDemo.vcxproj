@@ -65,12 +65,10 @@
   <ItemGroup>
     <ClCompile Include="application.cpp" />
     <ClCompile Include="fbxDemoApp.cpp" />
-    <ClCompile Include="shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
     <ClInclude Include="fbxDemoApp.h" />
-    <ClInclude Include="shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

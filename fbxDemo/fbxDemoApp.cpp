@@ -1,5 +1,4 @@
 #include "fbxDemoApp.h"
-#include "shader.h"
 #include <fbxsdk.h>
 // TODO: Write own math helper library
 #include "vmath.h"
@@ -264,11 +263,11 @@ void fbxDemoApp::render(double currentTime)
   rimcolor_location = glGetUniformLocation(current_program, "rim_color");
   if(rim_lighting)
   {
-    glUniform3f(rimcolor_location, 0.3, 0.3, 0.3);
+    glUniform3f(rimcolor_location, 0.3f, 0.3f, 0.3f);
   }
   else
   {
-    glUniform3f(rimcolor_location, 0.0, 0.0, 0.0);
+    glUniform3f(rimcolor_location, 0.0f, 0.0f, 0.0f);
   }
   glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_matrix);
   vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, zoom);

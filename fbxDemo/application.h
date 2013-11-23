@@ -3,6 +3,12 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+using namespace std;
 
 class Application
 {
@@ -26,5 +32,6 @@ protected:
   static void glfw_onMouseButton(GLFWwindow*, int, int, int);
   static void glfw_onMouseMove(GLFWwindow*, double, double);
   static void glfw_onMouseWheel(GLFWwindow*, double, double);
+  GLuint loadShader(const char*, GLenum);
 };
 
