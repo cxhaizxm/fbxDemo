@@ -216,7 +216,6 @@ void fbxDemoApp::startup(void)
   glBindVertexArray(vao);
   glGenBuffers(1, &vertex_vbo);
   glGenBuffers(1, &index_vbo);
-  glGenBuffers(1, &normals_vbo);
   compile_shaders();
   current_program = goraud_program;
   glUseProgram(current_program);
