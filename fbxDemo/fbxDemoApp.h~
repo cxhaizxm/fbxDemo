@@ -58,7 +58,6 @@ protected:
   GLuint normals_vbo;
 
   GLuint goraud_program;
-  GLuint outline_program;
   GLuint phong_program;
   GLuint blinnphong_program;
   GLuint current_program;

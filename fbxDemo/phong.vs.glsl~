@@ -20,7 +20,7 @@ uniform vec3 light_pos = vec3(100.0, 100.0, 100.0);
 void main(void)
 {
   vec4 pos_vs = mv_matrix * position;
-  vertex.normal = mat3(mv_matrix) * normal;
+  normal_fs = mat3(mv_matrix) * normal;
   L = light_pos - pos_vs.xyz;
   V = -pos_vs.xyz;
   gl_Position = proj_matrix * pos_vs;

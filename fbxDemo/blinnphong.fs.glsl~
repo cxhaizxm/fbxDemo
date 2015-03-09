@@ -29,7 +29,7 @@ vec3 calculate_rim(vec3 N, vec3 V)
 
 void main(void)
 {
-  vec3 N_fs = normalize(vertex.normal);
+  vec3 N_fs = normalize(normal_fs);
   vec3 L_fs = normalize(L);
   vec3 V_fs = normalize(V);
 

@@ -1,6 +1,12 @@
 #version 430 core
 
-in vec3 normal_fs;
+in Vertex
+{
+  vec3 normal;
+  vec3 color;
+} vertex;
+
+in vec4 pos_vs;
 in vec3 L;
 in vec3 V;
 
@@ -24,7 +30,7 @@ vec3 calculate_rim(vec3 N, vec3 V)
 
 void main(void)
 {
-  vec3 N_fs = normalize(normal_fs);
+  vec3 N_fs = normalize(vertex.normal);
   vec3 L_fs = normalize(L);
   vec3 V_fs = normalize(V);
 

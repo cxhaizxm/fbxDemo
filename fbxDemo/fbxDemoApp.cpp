@@ -18,10 +18,31 @@ void fbxDemoApp::compile_shaders(void)
 {
   GLuint vertex_shader;
   GLuint fragment_shader;
+  GLuint outline_shader;
+  GLuint geometry_shader;
 
   // Compile and Link Goraud Shader Program
   vertex_shader = loadShader("goraud.vs.glsl", GL_VERTEX_SHADER);
   fragment_shader = loadShader("fs.glsl", GL_FRAGMENT_SHADER);
+  geometry_shader = loadShader("hull_extrusion.gs.glsl", GL_GEOMETRY_SHADER);
+  outline_shader = loadShader("outline_fs.glsl", GL_FRAGMENT_SHADER);
+
+  outline_program = glCreateProgram();
+  glAttachShader(outline_program, vertex_shader);
+  glAttachShader(outline_program, geometry_shader);
+  glAttachShader(outline_program, outline_shader);
+  glLinkProgram(outline_program);
+
+  int result;
+  int info_log_length = -1;
+  glGetProgramiv(outline_program, GL_LINK_STATUS, &result);
+  glGetProgramiv(outline_program, GL_INFO_LOG_LENGTH, &info_log_length);
+  if(info_log_length > 0)
+  {
+    std::vector<char> errorMsg(info_log_length + 1);
+    glGetProgramInfoLog(outline_program, info_log_length, NULL, &errorMsg[0]);
+    printf("%s\n", &errorMsg[0]);
+  }
 
   goraud_program = glCreateProgram();
   glAttachShader(goraud_program, vertex_shader);
@@ -30,9 +51,8 @@ void fbxDemoApp::compile_shaders(void)
 
   glDeleteShader(vertex_shader);
   glDeleteShader(fragment_shader);
+  glDeleteShader(geometry_shader);
   
-  int result;
-  int info_log_length = -1;
   glGetProgramiv(goraud_program, GL_LINK_STATUS, &result);
   glGetProgramiv(goraud_program, GL_INFO_LOG_LENGTH, &info_log_length);
   if(info_log_length > 0)
@@ -225,8 +245,8 @@ void fbxDemoApp::startup(void)
   this->loadVBO();
   checkError();
 
-  glEnable(GL_CULL_FACE);
-  glFrontFace(GL_CCW);
+  //glEnable(GL_CULL_FACE);
+  //glFrontFace(GL_CCW);
   
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
@@ -262,6 +282,29 @@ void fbxDemoApp::render(double currentTime)
   glViewport(0, 0, this->w, this->h);
   glClearBufferfv(GL_COLOR, 0, bgcolor);
   glClearBufferfv(GL_DEPTH, 0, &one);
+  if(outlining) 
+  {
+    glUseProgram(outline_program);
+    mv_location = glGetUniformLocation(outline_program, "mv_matrix");
+    proj_location = glGetUniformLocation(outline_program, "proj_matrix");
+    rimcolor_location = glGetUniformLocation(outline_program, "rim_color");
+    if(rim_lighting)
+    {
+      glUniform3f(rimcolor_location, 0.3f, 0.3f, 0.3f);
+    }
+    else
+    {
+      glUniform3f(rimcolor_location, 0.0f, 0.0f, 0.0f);
+    }
+    glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_matrix);
+    vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, zoom);
+    mv_matrix *= vmath::rotate(rot_x, 0.0f, 0.0f);
+    mv_matrix *= vmath::rotate(0.0f, rot_y, 0.0f);
+    
+    glUniformMatrix4fv(mv_location, 1, GL_FALSE, mv_matrix);
+    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (GLvoid*)0);
+    glClearBufferfv(GL_DEPTH, 0, &one);
+  }
   glUseProgram(current_program);
   mv_location = glGetUniformLocation(current_program, "mv_matrix");
   proj_location = glGetUniformLocation(current_program, "proj_matrix");
@@ -311,6 +354,10 @@ void fbxDemoApp::onKey(GLFWwindow* window, int key, int scancode, int action, in
   if(key == GLFW_KEY_R && action == GLFW_RELEASE)
   {
     rim_lighting = !rim_lighting;
+  }
+  if(key == GLFW_KEY_O && action == GLFW_RELEASE)
+  {
+    outlining = !outlining;
   }
 }
 
