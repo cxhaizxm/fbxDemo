@@ -56,10 +56,13 @@ protected:
   GLuint vertex_vbo;
   GLuint index_vbo;
   GLuint normals_vbo;
+  GLuint cel_texture;
 
   GLuint goraud_program;
+  GLuint outline_program;
   GLuint phong_program;
   GLuint blinnphong_program;
+  GLuint toon_program;
   GLuint current_program;
 
   GLuint mv_location;

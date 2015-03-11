@@ -105,6 +105,26 @@ void fbxDemoApp::compile_shaders(void)
     glGetProgramInfoLog(blinnphong_program, info_log_length, NULL, &errorMsg[0]);
     printf("%s\n", &errorMsg[0]);
   }
+
+  vertex_shader = loadShader("phong.vs.glsl", GL_VERTEX_SHADER);
+  fragment_shader = loadShader("toon.fs.glsl", GL_FRAGMENT_SHADER);
+
+  cel_program = glCreateProgram();
+  glAttachShader(cel_program, vertex_shader);
+  glAttachShader(cel_program, fragment_shader);
+  glLinkProgram(cel_program);
+
+  glDeleteShader(vertex_shader);
+  glDeleteShader(fragment_shader);
+  info_log_length = -1;
+  glGetProgramiv(blinnphong_program, GL_LINK_STATUS, &result);
+  glGetProgramiv(blinnphong_program, GL_INFO_LOG_LENGTH, &info_log_length);
+  if(info_log_length > 0)
+  {
+    std::vector<char> errorMsg(info_log_length + 1);
+    glGetProgramInfoLog(blinnphong_program, info_log_length, NULL, &errorMsg[0]);
+    printf("%s\n", &errorMsg[0]);
+  }
   return;
 }
 
@@ -229,6 +249,13 @@ void fbxDemoApp::loadVBO()
 
 void fbxDemoApp::startup(void)
 {
+
+  static const GLubyte texture[] = 
+  {
+    0x00, 0x00, 0x44, 0x00,
+    0x80, 0x80, 0x88, 0x00,
+    0xc0, 0xc0, 0x88, 0x00,
+  };
   w = 1920;
   h = 1080;
   aspect = (float)w/(float)h;
@@ -247,6 +274,15 @@ void fbxDemoApp::startup(void)
 
   //glEnable(GL_CULL_FACE);
   //glFrontFace(GL_CCW);
+  
+  glGenTextures(1, &cel_texture);
+  glBindTexture(GL_TEXTURE_1D, cel_texture);
+  glTexStorage1D(GL_TEXTURE_1D, 1, GL_RGB8, sizeof(texture) / 4);
+  glTexSubImage1D(GL_TEXTURE_1D, 0, 0, sizeof(texture) / 4,
+      GL_RGBA, GL_UNSIGNED_BYTE, texture);
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
@@ -277,25 +313,18 @@ void fbxDemoApp::shutdown(void)
  
 void fbxDemoApp::render(double currentTime)
 {
-  const GLfloat bgcolor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+  const GLfloat bgcolor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
   static const GLfloat one = 1.0f;
   glViewport(0, 0, this->w, this->h);
   glClearBufferfv(GL_COLOR, 0, bgcolor);
   glClearBufferfv(GL_DEPTH, 0, &one);
+  glBindTexture(GL_TEXTURE_1D, cel_texture);
+  mv_location = glGetUniformLocation(outline_program, "mv_matrix");
+  proj_location = glGetUniformLocation(outline_program, "proj_matrix");
+  rimcolor_location = glGetUniformLocation(outline_program, "rim_color");
   if(outlining) 
   {
     glUseProgram(outline_program);
-    mv_location = glGetUniformLocation(outline_program, "mv_matrix");
-    proj_location = glGetUniformLocation(outline_program, "proj_matrix");
-    rimcolor_location = glGetUniformLocation(outline_program, "rim_color");
-    if(rim_lighting)
-    {
-      glUniform3f(rimcolor_location, 0.3f, 0.3f, 0.3f);
-    }
-    else
-    {
-      glUniform3f(rimcolor_location, 0.0f, 0.0f, 0.0f);
-    }
     glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_matrix);
     vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, zoom);
     mv_matrix *= vmath::rotate(rot_x, 0.0f, 0.0f);
@@ -350,6 +379,10 @@ void fbxDemoApp::onKey(GLFWwindow* window, int key, int scancode, int action, in
   if(key == GLFW_KEY_3 && action == GLFW_RELEASE)
   {
     current_program = blinnphong_program;
+  }
+  if(key == GLFW_KEY_4 && action == GLFW_RELEASE)
+  {
+    current_program = cel_program;
   }
   if(key == GLFW_KEY_R && action == GLFW_RELEASE)
   {
