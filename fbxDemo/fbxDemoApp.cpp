@@ -317,6 +317,10 @@ void fbxDemoApp::render(double currentTime)
   const GLfloat bgcolor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
   static const GLfloat one = 1.0f;
   glViewport(0, 0, this->w, this->h);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  glFrontFace(GL_CCW);
+
   glClearBufferfv(GL_COLOR, 0, bgcolor);
   glClearBufferfv(GL_DEPTH, 0, &one);
   glBindTexture(GL_TEXTURE_1D, cel_texture);
@@ -325,6 +329,7 @@ void fbxDemoApp::render(double currentTime)
   rimcolor_location = glGetUniformLocation(outline_program, "rim_color");
   if(outlining) 
   {
+    glLineWidth(5.0f);
     glUseProgram(outline_program);
     glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_matrix);
     vmath::mat4 mv_matrix = vmath::translate(tran_x, tran_y, zoom);
@@ -333,7 +338,7 @@ void fbxDemoApp::render(double currentTime)
     
     glUniformMatrix4fv(mv_location, 1, GL_FALSE, mv_matrix);
     glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (GLvoid*)0);
-    glClearBufferfv(GL_DEPTH, 0, &one);
+    //glClearBufferfv(GL_DEPTH, 0, &one);
   }
   glUseProgram(current_program);
   mv_location = glGetUniformLocation(current_program, "mv_matrix");

@@ -1,7 +1,7 @@
 #version 430
 
 layout(triangles) in;
-layout(triangle_strip, max_vertices = 6) out;
+layout(line_strip, max_vertices = 6) out;
 
 in Vertex
 {
@@ -12,18 +12,30 @@ in Vertex
 out vec3 normal_gs;
 out vec3 color_gs;
 
-uniform float line_width = 0.001;
+uniform float line_width = 0.0000001;
 
 void main(void) 
 {
   int i;
 
+  vec3 l1;
+  vec3 l2;
+  vec3 sn;
+
+  l1 = gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz;
+  l2 = gl_in[2].gl_Position.xyz - gl_in[1].gl_Position.xyz;
+  sn = cross(l1.xyz, l2.xyz);
+
   for(i = 0; i < gl_in.length(); i++)
   {
-    gl_Position = gl_in[i].gl_Position + line_width * vec4(vertex[i].normal, 0.0);
+    gl_Position = gl_in[i].gl_Position;// + line_width * vec4(vertex[i].normal, 0.0);
     color_gs = vec3(0,0,0);
     normal_gs = vertex[i].normal;
-    EmitVertex();
+    
+    float dot_product = dot(gl_Position.xyz, sn);
+    if(dot_product <= 0.0) {
+      EmitVertex();
+    }
   }
   EndPrimitive();
 }
