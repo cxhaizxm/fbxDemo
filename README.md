@@ -9,16 +9,16 @@ an FBX file and render it using OpenGL.
 
 Controls:
 
-Left click and drag: rotate model
-Middle click and drag: move model 
-Scroll wheel up/down: zoom in/out
+Left click and drag: rotate model<br />
+Middle click and drag: move model<br />
+Scroll wheel up/down: zoom in/out<br />
 
-1 - Goraud shader program
-2 - Phong shader program
-3 - Blinn-Phong shader program
-4 - Toon shader program
+1 - Goraud shader program<br />
+2 - Phong shader program<br />
+3 - Blinn-Phong shader program<br />
+4 - Toon shader program<br />
 
-R - toggle rimlight effect
-O - toggle geometry shader toon outline
-S - recompile shaders
+R - toggle rimlight effect<br />
+O - toggle geometry shader toon outline<br />
+S - recompile shaders<br />
 
