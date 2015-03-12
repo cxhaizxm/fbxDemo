@@ -4,6 +4,7 @@
 #include "vmath.h"
 #include <vector>
 
+
 void checkError();
 fbxDemoApp::fbxDemoApp(void)
 {
@@ -155,7 +156,7 @@ void fbxDemoApp::loadFromFBX(const char *filename)
 void fbxDemoApp::traverseFBXNodes(FbxNode* node)
 {
   const char* nodeName = node->GetName();
-  printf("Da node name: %s\n", nodeName);
+  printf("node name: %s\n", nodeName);
   // Get da transforms
   FbxDouble3 translation = node->LclTranslation.Get();
   FbxDouble3 rotation = node->LclRotation.Get();
@@ -252,9 +253,8 @@ void fbxDemoApp::startup(void)
 
   static const GLubyte texture[] = 
   {
-    0x00, 0x00, 0x44, 0x00,
-    0x40, 0x40, 0x88, 0x00,
-    0x80, 0x80, 0x88, 0x00,
+    0x80, 0x80, 0x66, 0x00,
+    0xc0, 0xc0, 0x88, 0x00,
     0xc0, 0xc0, 0x88, 0x00,
   };
   w = 1920;
@@ -371,18 +371,22 @@ void fbxDemoApp::onKey(GLFWwindow* window, int key, int scancode, int action, in
   }
   if(key == GLFW_KEY_1 && action == GLFW_RELEASE)
   {
+    shader_choice = GORAUD;
     current_program = goraud_program;
   }
   if(key == GLFW_KEY_2 && action == GLFW_RELEASE)
   {
+    shader_choice = PHONG;
     current_program = phong_program;
   }
   if(key == GLFW_KEY_3 && action == GLFW_RELEASE)
   {
+    shader_choice = BLINNPHONG;
     current_program = blinnphong_program;
   }
   if(key == GLFW_KEY_4 && action == GLFW_RELEASE)
   {
+    shader_choice = TOON;
     current_program = cel_program;
   }
   if(key == GLFW_KEY_R && action == GLFW_RELEASE)
@@ -392,6 +396,25 @@ void fbxDemoApp::onKey(GLFWwindow* window, int key, int scancode, int action, in
   if(key == GLFW_KEY_O && action == GLFW_RELEASE)
   {
     outlining = !outlining;
+  }
+  if(key == GLFW_KEY_S && action == GLFW_RELEASE)
+  {
+    compile_shaders();
+    switch(shader_choice) {
+      case GORAUD:
+        current_program = goraud_program;
+        break;
+      case PHONG:
+        current_program = phong_program;
+        break;
+      case BLINNPHONG:
+        current_program = blinnphong_program;
+        break;
+      case TOON:
+        current_program = cel_program;
+        break;
+
+    };
   }
 }
 

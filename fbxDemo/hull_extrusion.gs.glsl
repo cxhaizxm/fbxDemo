@@ -12,7 +12,7 @@ in Vertex
 out vec3 normal_gs;
 out vec3 color_gs;
 
-uniform float line_width = 0.01f;
+uniform float line_width = 0.001;
 
 void main(void) 
 {

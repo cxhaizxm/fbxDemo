@@ -10,6 +10,8 @@ in Vertex
 in vec3 L;
 in vec3 V;
 
+uniform float inner_line_width = 0.15;
+
 out vec4 color;
 
 void main(void) 
@@ -21,4 +23,8 @@ void main(void)
   float tc = pow(max(0.0, dot(N_fs, L_fs)), 2.0);
 
   color = texture(cel_sampler, tc);
+  float dot_product = dot(V_fs, N_fs);
+  if(dot_product < inner_line_width && dot_product > -inner_line_width) {
+    color = vec4(0,0,0, 1);
+  }
 }

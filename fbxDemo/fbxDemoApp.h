@@ -2,6 +2,14 @@
 #include "application.h"
 #include "vmath.h"
 #include <fbxsdk.h>
+
+enum ShaderProgram {
+  GORAUD,
+  PHONG,
+  BLINNPHONG,
+  TOON
+};
+
 class fbxDemoApp :
   public Application
 {
@@ -64,6 +72,8 @@ protected:
   GLuint blinnphong_program;
   GLuint cel_program;
   GLuint current_program;
+
+  ShaderProgram shader_choice;
 
   GLuint mv_location;
   GLuint proj_location;
