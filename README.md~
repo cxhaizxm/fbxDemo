@@ -9,10 +9,6 @@ an FBX file and render it using OpenGL.
 
 Controls:
 
-Left click and drag: rotate model
-Middle click and drag: move model 
-Scroll wheel up/down: zoom in/out
-
 1 - Goraud shader program
 2 - Phong shader program
 3 - Blinn-Phong shader program
