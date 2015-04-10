@@ -3,7 +3,12 @@
 layout (location = 0) in vec4 position;
 layout (location = 1) in vec3 normal;
 
-out vec3 normal_fs;
+out Vertex
+{
+  vec3 normal;
+  vec3 color;
+} vertex;
+
 out vec3 L;
 out vec3 V;
 
@@ -15,7 +20,7 @@ uniform vec3 light_pos = vec3(100.0, 100.0, 100.0);
 void main(void)
 {
   vec4 pos_vs = mv_matrix * position;
-  normal_fs = mat3(mv_matrix) * normal;
+  vertex.normal = mat3(mv_matrix) * normal;
   L = light_pos - pos_vs.xyz;
   V = -pos_vs.xyz;
   gl_Position = proj_matrix * pos_vs;

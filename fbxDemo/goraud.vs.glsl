@@ -3,8 +3,11 @@
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec3 normal;
 
-out vec3 normal_fs;
-out vec3 color_fs;
+out Vertex
+{
+  vec3 normal;
+  vec3 color;
+} vertex;
 
 uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
@@ -29,8 +32,8 @@ vec3 calculate_rim(vec3 N, vec3 V)
 void main(void)
 {
   vec4 pos_vs = mv_matrix * position;
-  vec3 N = mat3(mv_matrix) * normal;
-  vec3 L = light_pos - pos_vs.xyz;
+  vec3 N = (mv_matrix * vec4(normal,0)).xyz;
+  vec3 L = light_pos - position.xyz;
   vec3 V = -pos_vs.xyz;
 
   N = normalize(N);
@@ -42,8 +45,8 @@ void main(void)
   vec3 specular = pow(max(dot(R, V), 0.0), specular_power) * specular_albedo;
   vec3 rim_lighting = calculate_rim(N, V);
 
-  color_fs = diffuse + specular + rim_lighting;
-  normal_fs = normal;
+  vertex.color = diffuse + specular + rim_lighting;
+  vertex.normal = (mv_matrix * vec4(normal,0)).xyz;
 
   gl_Position = proj_matrix * pos_vs;
 

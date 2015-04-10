@@ -2,6 +2,14 @@
 #include "application.h"
 #include "vmath.h"
 #include <fbxsdk.h>
+
+enum ShaderProgram {
+  GORAUD,
+  PHONG,
+  BLINNPHONG,
+  TOON
+};
+
 class fbxDemoApp :
   public Application
 {
@@ -33,6 +41,7 @@ protected:
   bool rotationEnabled;
   bool translationEnabled;
   bool rim_lighting;
+  bool outlining;
   // Mouse coordinates for translation
   double mouse_x, mouse_y;
   double mouse_base_x, mouse_base_y;
@@ -55,11 +64,16 @@ protected:
   GLuint vertex_vbo;
   GLuint index_vbo;
   GLuint normals_vbo;
+  GLuint cel_texture;
 
   GLuint goraud_program;
+  GLuint outline_program;
   GLuint phong_program;
   GLuint blinnphong_program;
+  GLuint cel_program;
   GLuint current_program;
+
+  ShaderProgram shader_choice;
 
   GLuint mv_location;
   GLuint proj_location;
