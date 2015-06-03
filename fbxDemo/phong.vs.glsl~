@@ -13,7 +13,7 @@ out vec3 L;
 out vec3 V;
 
 uniform mat4 mv_matrix;
-uniform mat3 n_matrix;
+uniform mat4 n_matrix;
 uniform mat4 proj_matrix;
 
 uniform vec3 light_pos = vec3(100.0, 100.0, 100.0);

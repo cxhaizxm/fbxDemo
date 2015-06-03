@@ -77,7 +77,6 @@ protected:
   ShaderProgram shader_choice;
 
   GLuint mv_location;
-  GLuint n_location;
   GLuint proj_location;
   GLuint rimcolor_location;
 
