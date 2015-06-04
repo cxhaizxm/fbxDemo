@@ -12,6 +12,7 @@ uniform mat4 proj_matrix;
 void main(void)
 {
   vec4 pos_vs = mv_matrix * position;
-  normal_fs = n_matrix * normal;
+  view_fs = pos_vs;
+  normal_fs = proj_matrix * n_matrix * normal;
   gl_Position = proj_matrix * pos_vs;
 }

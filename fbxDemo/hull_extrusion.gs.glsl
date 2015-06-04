@@ -7,6 +7,7 @@ in Vertex
 {
   vec3 normal;
   vec3 color;
+  vec3 view;
 } vertex[];
 
 out vec3 normal_gs;
@@ -24,8 +25,8 @@ void main(void)
     color_gs = vec3(0,0,0);
     normal_gs = vertex[i].normal;
     
-    float dot_product = dot(vec3(0,0,1), normal_gs);
-    if(dot_product <= 0.0) {
+    float dot_product = dot(-vec3(vertex[i].view), normal_gs);
+    if(dot_product >= 0.0) {
       EmitVertex();
     }
   }

@@ -7,6 +7,7 @@ out Vertex
 {
   vec3 normal;
   vec3 color;
+  vec3 view;
 } vertex;
 
 uniform mat4 mv_matrix;
@@ -36,6 +37,7 @@ void main(void)
   vec3 N = n_matrix * normal;
   vec3 L = light_pos - position.xyz;
   vec3 V = -pos_vs.xyz;
+  vertex.view = V;
 
   N = normalize(N);
   L = normalize(L);
