@@ -4,6 +4,7 @@ in Vertex
 {
   vec3 normal;
   vec3 color;
+  vec3 view;
 } vertex;
 
 in vec3 L;

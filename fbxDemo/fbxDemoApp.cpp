@@ -260,8 +260,8 @@ void fbxDemoApp::startup(void)
     0xc0, 0xc0, 0x88, 0x00,
     0xc0, 0xc0, 0x88, 0x00,
   };
-  w = 1920;
-  h = 1080;
+  w = 800;
+  h = 600;
   aspect = (float)w/(float)h;
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
@@ -337,8 +337,9 @@ void fbxDemoApp::render(double currentTime)
     glUseProgram(outline_program);
     glUniformMatrix4fv(proj_location, 1, GL_FALSE, glm::value_ptr(proj_matrix));
     glm::mat4 mv_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(tran_x, tran_y, zoom));
-    mv_matrix = glm::rotate(mv_matrix, rot_x, glm::vec3(1.0f, 0.0, 0.0f));
-    mv_matrix = glm::rotate(mv_matrix, rot_y, glm::vec3(0.0f, 1.0, 0.0f));
+    // TODO: fix problems from having to rotate in-order
+    mv_matrix = glm::rotate(mv_matrix, rot_x * 0.0174532925f, glm::vec3(1.0f, 0.0, 0.0f));
+    mv_matrix = glm::rotate(mv_matrix, rot_y * 0.0174532925f, glm::vec3(0.0f, 1.0, 0.0f));
     glm::mat3 m_matrix = glm::mat3(mv_matrix);
     glm::mat3 n_matrix = glm::inverseTranspose(m_matrix);
     
@@ -362,8 +363,8 @@ void fbxDemoApp::render(double currentTime)
   }
   glUniformMatrix4fv(proj_location, 1, GL_FALSE, glm::value_ptr(proj_matrix));
   glm::mat4 mv_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(tran_x, tran_y, zoom));
-  mv_matrix = glm::rotate(mv_matrix, rot_x, glm::vec3(1.0f, 0.0, 0.0f));
-  mv_matrix = glm::rotate(mv_matrix, rot_y, glm::vec3(0.0f, 1.0, 0.0f));
+  mv_matrix = glm::rotate(mv_matrix, rot_x * 0.0174532925f, glm::vec3(1.0f, 0.0, 0.0f));
+  mv_matrix = glm::rotate(mv_matrix, rot_y * 0.0174532925f, glm::vec3(0.0f, 1.0, 0.0f));
   glm::mat3 m_matrix = glm::mat3(mv_matrix);
   glm::mat3 n_matrix = glm::inverseTranspose(m_matrix);
   

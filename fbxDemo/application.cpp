@@ -27,7 +27,7 @@ void Application::run(Application* the_app)
   GLFWwindow* window;
 
   glfwWindowHint(GLFW_SAMPLES, 8);
-  window = glfwCreateWindow(1920, 1080, "OpenGL Demo", NULL, NULL);
+  window = glfwCreateWindow(800, 600, "OpenGL Demo", NULL, NULL);
   glfwMakeContextCurrent(window);
 
   glewExperimental = true;

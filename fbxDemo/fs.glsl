@@ -3,6 +3,7 @@
 in Vertex {
   vec3 normal;
   vec3 color;
+  vec3 view;
 } vertex;
 
 out vec4 color;
