@@ -30,7 +30,7 @@ void main(void)
 {
   vec3 N_fs = normalize(vertex.normal);
   vec3 L_fs = normalize(vertex.L);
-  vec3 V_fs = normalize(vertex.view);
+  vec3 V_fs = normalize(vertex.V);
 
   vec3 R = reflect(-L_fs, N_fs);
 

@@ -8,6 +8,7 @@ out Vertex
   vec3 normal;
   vec3 color;
   vec3 view;
+  vec3 L;
 } vertex;
 
 uniform mat4 mv_matrix;
